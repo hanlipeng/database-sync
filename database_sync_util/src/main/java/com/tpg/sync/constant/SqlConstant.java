@@ -24,26 +24,27 @@ public class SqlConstant {
     private final static String TIME_UPDATE_SQL = "update #table_name set sync_time = ? where table_id = ?";
     private final static String INSERT_FIELD_INFO_SQL = "REPLACE INTO `#fieldInfo` (`src_field_name`, `dest_field_name`, `field_type`, `field_length`, `is_time`, `m2m`, `is_primary`, `join_table_id`, `table_id`) " +
             "VALUES (?, ?, ?, ?, ?, NULL, ?, NULL, ?);";
+    private final static String UPDATE_TABLE_RUN_ABLE_SQL = "update #table_name set runable=0 where table_id=?";
 
     private final static Properties CONFIG = Utils.getConfig();
+    private final static String TABLE_NAME=CONFIG.getProperty("db.tableinfo.name");
+    private final static String DB_NAME=CONFIG.getProperty("db.dbinfo.name");
+    private final static String MODULE_NAME=CONFIG.getProperty("db.moduleinfo.name");
+    private final static String FIELD_NAME=CONFIG.getProperty("db.tableinfo.name");
 
     public static String getDataBaseConfigSql() {
-        String property = CONFIG.getProperty("db.dbinfo.name");
-        return DATABASE_SQL_TMP.replace("#dataBaseInfo", property);
+        return DATABASE_SQL_TMP.replace("#dataBaseInfo", DB_NAME);
     }
 
     public static String getTableConfigSql() {
-        String property = CONFIG.getProperty("db.tableinfo.name");
-        return TABLE_SQL_TMP.replace("#tableinfo", property);
+        return TABLE_SQL_TMP.replace("#tableinfo", TABLE_NAME);
     }
 
     public static String getTableConfigByTableIdSql() {
-        String property = CONFIG.getProperty("db.tableinfo.name");
-        return ONE_TABLE_SQL_TMP.replace("#tableinfo", property);
+        return ONE_TABLE_SQL_TMP.replace("#tableinfo", TABLE_NAME);
     }
 
     public static String getModuleConfigSql(String[] args) {
-        String property = CONFIG.getProperty("db.moduleinfo.name");
         String condition = "";
         if (args!=null&&args.length > 0) {
             StringBuilder conditionBuilder = new StringBuilder();
@@ -52,29 +53,27 @@ public class SqlConstant {
             }
             condition = String.format("and module_id in (%s)", conditionBuilder.substring(1));
         }
-        return MODULE_SQL_TMP.replace("#moduleinfo", property).replace("#condition", condition);
+        return MODULE_SQL_TMP.replace("#moduleinfo", MODULE_NAME).replace("#condition", condition);
     }
 
     public static String getFieldConfigSql() {
-        String property = CONFIG.getProperty("db.fieldinfo.name");
-        return FIELD_SQL_TMP.replace("#fieldinfo", property);
+        return FIELD_SQL_TMP.replace("#fieldinfo", FIELD_NAME);
     }
 
     public static String getFieldConfigByFieldIdSql() {
-        String property = CONFIG.getProperty("db.fieldinfo.name");
-        return ONE_FIELD_SQL_TMP.replace("#fieldinfo", property);
+        return ONE_FIELD_SQL_TMP.replace("#fieldinfo", FIELD_NAME);
     }
 
     public static String getTimeUpdateSql() {
-        String tableName = CONFIG.getProperty("db.tableinfo.name");
-        return TIME_UPDATE_SQL.replace("#table_name", tableName);
+        return TIME_UPDATE_SQL.replace("#table_name", TABLE_NAME);
     }
     public static String getTableInfoSql(){
-        String tableName = CONFIG.getProperty("db.tableinfo.name");
-        return TABLE_INFO_SQL_TMP.replace("#tableinfo",tableName);
+        return TABLE_INFO_SQL_TMP.replace("#tableinfo",TABLE_NAME);
     }
     public static String getInsertFieldInfo(){
-        String property = CONFIG.getProperty("db.fieldinfo.name");
-        return INSERT_FIELD_INFO_SQL.replace("#fieldinfo",property);
+        return INSERT_FIELD_INFO_SQL.replace("#fieldinfo",FIELD_NAME);
+    }
+    public static String getUpdateTableRunAbleSql(){
+        return UPDATE_TABLE_RUN_ABLE_SQL.replace("#table_name",TABLE_NAME);
     }
 }

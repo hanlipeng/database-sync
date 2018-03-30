@@ -6,6 +6,14 @@ package com.tpg.sync.constant;
  */
 public class TableSpecialKeyConstant {
     /**
+     * 判断值true
+     */
+    public static final String TRUE = "1";
+    /**
+     * 判断值false
+     */
+    public static final String FALSE = "0";
+    /**
      * 用于存储主键增量同步数据
      */
     public static final String PRIMARY_VALUE = "primaryValue";
@@ -27,4 +35,6 @@ public class TableSpecialKeyConstant {
     public static final String TIME_SET="TIME";
 
     public static final String TIME_SET_IGNORE="false";
+
+    public static final String ONCE_FLAG = "ONCE";
 }

@@ -223,8 +223,8 @@ public class SyncTable extends SyncSonThread implements SyncParentThread {
     public void afterEndThread(boolean errorState) throws Exception {
         if (!module.isTransactionFlag()) {
             if (!errorState) {
-                endRun();
                 destConn.commit();
+                endRun();
             } else {
                 destConn.rollback();
             }
@@ -295,6 +295,11 @@ public class SyncTable extends SyncSonThread implements SyncParentThread {
         }
         if (!module.isTransactionFlag()) {
             TableUtil.updateTableSyncTime(this);
+        }
+        if (TableSpecialKeyConstant.TRUE.equals(specialKey.get(TableSpecialKeyConstant.ONCE_FLAG))) {
+            PreparedStatement preparedStatement = conn.prepareStatement(SqlConstant.getUpdateTableRunAbleSql());
+            preparedStatement.setInt(1, id);
+            preparedStatement.execute();
         }
     }
 

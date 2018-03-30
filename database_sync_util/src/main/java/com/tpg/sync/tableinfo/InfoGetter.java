@@ -30,7 +30,7 @@ public class InfoGetter {
     private static final Properties CONFIG = Utils.getConfig();
 
     public void getTableInfo() throws Exception {
-        String insertInfoSql = SqlConstant.getTableInfoSql();
+        String insertInfoSql = SqlConstant.getInsertFieldInfo();
         String getTableListSql = SqlConstant.getTableInfoSql();
         // 获取表的结构信息
         Connection infoConn = ConnectionUtils.getConnection();
