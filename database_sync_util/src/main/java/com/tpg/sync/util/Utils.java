@@ -2,7 +2,6 @@ package com.tpg.sync.util;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,7 +9,6 @@ import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Set;
 
 /**
  * 工具类
@@ -21,51 +19,23 @@ import java.util.Set;
  */
 public class Utils {
     private static Properties config = new Properties();
-    private static Properties sqlrule = new Properties();
+    private static Properties sqlRule = new Properties();
     private static Properties tableType = new Properties();
     private static Properties threadConfig = new Properties();
     private static Logger logger = LoggerFactory.getLogger(Utils.class);
 
     public static Properties getConfig() {
-        if (config.isEmpty()) {
-            try {
-                config.load(Utils.class.getClassLoader().getResourceAsStream("dbsyncconfig.properties"));
-            } catch (IOException e) {
-                logger.error(e.toString());
-            }
-        }
         return config;
     }
 
     public static Properties getSqlRule() {
-        if (sqlrule.isEmpty()) {
-            try {
-                sqlrule.load(Utils.class.getClassLoader().getResourceAsStream("newsqlrule.properties"));
-            } catch (IOException e) {
-                logger.error(e.toString());
-            }
-        }
-        return sqlrule;
+        return sqlRule;
     }
     public static Properties getThreadConfig() {
-        if (sqlrule.isEmpty()) {
-            try {
-                threadConfig.load(Utils.class.getClassLoader().getResourceAsStream("threadConfig.properties"));
-            } catch (IOException e) {
-                logger.error(e.toString());
-            }
-        }
         return threadConfig;
     }
 
     public static Properties getTableType() {
-        if (tableType.isEmpty()) {
-            try {
-                tableType.load(Utils.class.getClassLoader().getResourceAsStream("tabletype.properties"));
-            } catch (IOException e) {
-                logger.error(e.toString());
-            }
-        }
         return tableType;
     }
 
@@ -87,5 +57,29 @@ public class Utils {
 
     public static int stringToInt(String value) {
         return value == null || "".equals(value) ? 0 : Integer.valueOf(value);
+    }
+
+    public static void loadConfig(File resourceConfigFile, File sqlRuleFile, File tableTypeFile, File threadConfigFile) throws IOException {
+        config.load(new FileReader(resourceConfigFile));
+        sqlRule.load(new FileReader(sqlRuleFile));
+        threadConfig.load(new FileReader(threadConfigFile));
+        tableType.load(new FileReader(tableTypeFile));
+    }
+
+
+    public static HashMap<String, Object> jsonToMap(String object) {
+        HashMap<String, Object> res;
+        try {
+            res = new Gson().fromJson(object, new TypeToken<HashMap<String, Object>>() {
+            }.getType());
+            if (res == null) {
+                res = new HashMap<>(1);
+            }
+        } catch (Exception e) {
+            System.out.println(object);
+            throw e;
+        }
+        return res;
+
     }
 }

@@ -79,6 +79,11 @@ public class SyncModuleManager implements SyncParentThread {
         return "end com.tpg.sync.sync;\ntotal time is "+(System.currentTimeMillis()-countTime)/1000+"s";
     }
 
+    @Override
+    public String getErrorLog() {
+        return null;
+    }
+
     public List<SyncModule> getModuleList() {
         return moduleList;
     }

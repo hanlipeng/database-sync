@@ -229,6 +229,10 @@ public class SyncTable extends SyncSonThread implements SyncParentThread {
                 destConn.rollback();
             }
             destConn.close();
+        } else {
+            if (errorState) {
+                threadManage.changeErrorState();
+            }
         }
         System.gc();
     }
@@ -265,7 +269,7 @@ public class SyncTable extends SyncSonThread implements SyncParentThread {
     }
 
     @Override
-    protected String getErrorLog() {
+    public String getErrorLog() {
         return "srcTable:" + srcTableName + "-->destTable:" + destTableName + "has error" + "\nsrcsql:" + srcSql + "\ndestSql:" + destSql + "\n";
     }
 
@@ -289,7 +293,7 @@ public class SyncTable extends SyncSonThread implements SyncParentThread {
             pre.setObject(1, new Gson().toJson(specialKey));
             pre.execute();
         }
-        if(!module.isTransactionFlag()){
+        if (!module.isTransactionFlag()) {
             TableUtil.updateTableSyncTime(this);
         }
     }

@@ -170,7 +170,7 @@ public class SyncModule extends SyncSonThread implements SyncParentThread {
         //返回是否有下一个需要同步的表 ,
         // 后面的errorState||!transactionFlag的这个判断是说,如果这个module是module级事务,则其中一个表失败,之后的同步就不在进行
         //如果不是.则忽略errorState的判断;
-        return dealTableIndex+1 < tableList.size() && (!transactionFlag || errorState);
+        return dealTableIndex+1 < tableList.size() && (!transactionFlag || !errorState);
     }
 
     @Override
@@ -197,7 +197,7 @@ public class SyncModule extends SyncSonThread implements SyncParentThread {
     }
 
     @Override
-    protected String getErrorLog() {
+    public String getErrorLog() {
         return null;
     }
 

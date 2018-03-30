@@ -37,8 +37,5 @@ public class SyncDataProcessor extends SyncSonThread {
         return valueBuilder.hasNext();
     }
 
-    @Override
-    protected String getErrorLog() {
-        return "srcTable:" + syncTable.getSrcTableName() + "-->destTable:" + syncTable.getDestTableName() + "has error"+"\nsrcsql:"+syncTable.getSrcSql()+"\ndestSql:"+syncTable.getDestSql()+"\n";
-    }
+
 }

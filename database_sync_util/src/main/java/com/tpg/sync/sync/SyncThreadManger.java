@@ -1,7 +1,7 @@
 package com.tpg.sync.sync;
 
 
-import com.tpg.sync.util.SyncThreadFactory;
+import com.tpg.sync.factory.SyncThreadFactory;
 import com.tpg.sync.util.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +23,7 @@ public class SyncThreadManger {
     private static final String MAX_NUMBER_OF_COLUMN_SUFFIX = ".maxNumberOfColumn";
     private static ThreadPoolExecutor threadPoolExecutor;
     private SyncParentThread parentThread;
-    private Logger logger=LoggerFactory.getLogger(SyncThreadManger.class);
+    private Logger logger = LoggerFactory.getLogger(SyncThreadManger.class);
 
     static {
         threadPoolExecutor = new ThreadPoolExecutor(getSumNumberOfThreads(),
@@ -34,7 +34,7 @@ public class SyncThreadManger {
         threadPoolExecutor.allowCoreThreadTimeOut(true);
     }
 
-    public SyncThreadManger(SyncParentThread parentThread) {
+    SyncThreadManger(SyncParentThread parentThread) {
         this.parentThread = parentThread;
     }
 
@@ -86,6 +86,10 @@ public class SyncThreadManger {
             Thread.sleep(100);
         }
         parentThread.afterEndThread(threadManage.isError());
+        if (threadManage.isError()) {
+            Logger logger = LoggerFactory.getLogger(this.getClass());
+            logger.error(parentThread.getErrorLog(), threadManage.getError());
+        }
         logger.info(parentThread.getEndLog());
     }
 }
@@ -93,9 +97,10 @@ public class SyncThreadManger {
 class ThreadManage {
     private boolean state = false;
     private ArrayBlockingQueue<ThreadMark> threadMarks;
+    private Exception error;
 
     ThreadManage(int maxNumberOfThreads) {
-        threadMarks= new ArrayBlockingQueue<>(maxNumberOfThreads);
+        threadMarks = new ArrayBlockingQueue<>(maxNumberOfThreads);
     }
 
     public void setThreadMark() throws InterruptedException {
@@ -106,8 +111,8 @@ class ThreadManage {
         threadMarks.take();
     }
 
-    public void setErrorState(boolean state) {
-        this.state = state;
+    public void changeErrorState() {
+        state = true;
     }
 
     public boolean isError() {
@@ -116,6 +121,14 @@ class ThreadManage {
 
     public boolean isRunning() {
         return threadMarks.size() != 0;
+    }
+
+    public void setError(Exception error) {
+        this.error = error;
+    }
+
+    public Exception getError() {
+        return error;
     }
 }
 

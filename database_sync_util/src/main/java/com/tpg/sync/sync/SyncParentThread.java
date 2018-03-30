@@ -54,12 +54,16 @@ public interface SyncParentThread {
     boolean needWait(boolean running);
 
     /** 获取子线程开始时需要打印的线程.一般做计时用;
-     * @return
+     * @return 日志内容
      */
     String getStartLog();
 
     /** 获取子线程结束时需要打印的线程
-     * @return
+     * @return 日志内容
      */
     String getEndLog();
+    /** 报错时打印的日志
+     * @return 日志内容;
+     */
+    String getErrorLog();
 }

@@ -8,17 +8,16 @@ import org.slf4j.LoggerFactory;
  * @date 2018/3/22
  */
 public abstract class SyncSonThread implements Runnable {
-    private ThreadManage threadManage;
+    ThreadManage threadManage;
 
     @Override
     public void run() {
         try {
             mainRun();
         } catch (Exception e) {
-            threadManage.setErrorState(true);
-            Logger logger = LoggerFactory.getLogger(this.getClass());
-            logger.error(getErrorLog());
-            logger.error("error:", e);
+            threadManage.changeErrorState();
+            threadManage.setError(e);
+
         }
         try {
             threadManage.removeThreadMark();
@@ -45,8 +44,5 @@ public abstract class SyncSonThread implements Runnable {
         this.threadManage = threadManage;
     }
 
-    /** 报错时打印的日志
-     * @return 日志内容;
-     */
-    protected abstract String getErrorLog();
+
 }
