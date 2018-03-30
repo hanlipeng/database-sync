@@ -221,10 +221,19 @@ public class SyncTable extends SyncSonThread implements SyncParentThread {
 
     @Override
     public void afterEndThread(boolean errorState) throws Exception {
+        endRun();
         if (!module.isTransactionFlag()) {
             if (!errorState) {
                 destConn.commit();
-                endRun();
+                if (!module.isTransactionFlag()) {
+                    TableUtil.updateTableSyncTime(this);
+                }
+                Connection conn = ConnectionUtils.getConnection();
+                if (TableSpecialKeyConstant.TRUE.equals(specialKey.get(TableSpecialKeyConstant.ONCE_FLAG))) {
+                    PreparedStatement preparedStatement = conn.prepareStatement(SqlConstant.getUpdateTableRunAbleSql());
+                    preparedStatement.setInt(1, id);
+                    preparedStatement.execute();
+                }
             } else {
                 destConn.rollback();
             }
@@ -293,26 +302,10 @@ public class SyncTable extends SyncSonThread implements SyncParentThread {
             pre.setObject(1, new Gson().toJson(specialKey));
             pre.execute();
         }
-        if (!module.isTransactionFlag()) {
-            TableUtil.updateTableSyncTime(this);
-        }
-        if (TableSpecialKeyConstant.TRUE.equals(specialKey.get(TableSpecialKeyConstant.ONCE_FLAG))) {
-            PreparedStatement preparedStatement = conn.prepareStatement(SqlConstant.getUpdateTableRunAbleSql());
-            preparedStatement.setInt(1, id);
-            preparedStatement.execute();
-        }
+
     }
 
     private void startRun() throws Exception {
-        Double d = 101.0;
-        if (specialKey.get(POST) != null) {
-            String post = HttpUtil.post(specialKey.get(POST).toString(), null);
-            HashMap<String, Object> res = Utils.jsonToMap(post);
-            boolean code = d.equals(res.get("code"));
-            if (!code) {
-                throw new Exception("post has error url:" + specialKey.get(POST).toString());
-            }
-        }
         if (specialKey.get(START_RUN) != null) {
             sqlRun(specialKey.get(START_RUN), destConn);
         }
@@ -347,10 +340,13 @@ public class SyncTable extends SyncSonThread implements SyncParentThread {
             infoSta.setString(2, syncDataBase.srcDataBase.getDatabaseName());
         }
         ResultSet res = infoSta.executeQuery();
+        fieldList=new LinkedList<>();
         while (res.next()) {
             String fieldName = res.getString("field_name");
-            boolean identify = res.getBoolean("is_identify");
-            SyncField field = new SyncField(0, fieldName, fieldName, 0, null, identify, id, null, null);
+            String identifyFlag = res.getString("is_identify");
+            String fieldType = res.getString("field_type");
+            boolean identify="1".equals(identifyFlag)||"PRI".equals(identifyFlag);
+            SyncField field = new SyncField(0, fieldName, fieldName, 0, null, identify, id, fieldType, null);
             fieldList.add(field);
         }
     }

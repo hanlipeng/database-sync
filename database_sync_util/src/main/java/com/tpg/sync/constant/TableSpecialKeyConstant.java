@@ -25,16 +25,7 @@ public class TableSpecialKeyConstant {
      * 在同步之前运行的sql
      */
     public static final String START_RUN = "S";
-    /**
-     * 用于请求特殊URL来触发保存数据等类型的操作
-     */
-    public static final String POST="POST";
-    /**
-     * 用于判断是否需要时间同步
-     */
-    public static final String TIME_SET="TIME";
 
-    public static final String TIME_SET_IGNORE="false";
 
     public static final String ONCE_FLAG = "ONCE";
 }

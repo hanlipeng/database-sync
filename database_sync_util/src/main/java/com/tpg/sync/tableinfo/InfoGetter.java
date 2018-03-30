@@ -27,7 +27,6 @@ import java.util.Properties;
 public class InfoGetter {
 
     private static final Logger logger = LoggerFactory.getLogger(InfoGetter.class);
-    private static final Properties CONFIG = Utils.getConfig();
 
     public void getTableInfo() throws Exception {
         String insertInfoSql = SqlConstant.getInsertFieldInfo();
@@ -37,7 +36,7 @@ public class InfoGetter {
         List<SyncTable> syncTableList = new LinkedList<>();
         ResultSet res = infoConn.createStatement().executeQuery(getTableListSql);
         while (res.next()) {
-            int id = res.getInt("id");
+            int id = res.getInt("table_id");
             String srcTableName = res.getString("src_table");
             String destTableName = res.getString("dest_table");
             String databaseId = res.getString("db_id");
@@ -53,7 +52,7 @@ public class InfoGetter {
                     pre.setObject(1, f.getSrcFieldName());
                     pre.setObject(2, f.getSrcFieldName());
                     pre.setObject(3, "datetime".equals(f.getTime()) ? 120 : null);
-                    pre.setObject(4, f.isPrimary());
+                    pre.setObject(4, f.isPrimary()?1:0);
                     pre.setObject(5, f.getTableId());
                     pre.addBatch();
                 }
@@ -68,10 +67,5 @@ public class InfoGetter {
         } finally {
             infoConn.close();
         }
-    }
-
-    public static void main(String[] args) throws Exception {
-        InfoGetter infoGetter = new InfoGetter();
-        infoGetter.getTableInfo();
     }
 }

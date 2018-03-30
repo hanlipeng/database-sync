@@ -29,7 +29,7 @@ public class SyncModuleManager implements SyncParentThread {
         moduleList=new LinkedList<>();
         while (res.next()){
             int id = res.getInt(1);
-            boolean runnable = res.getInt("runnable") == 1;
+            boolean runnable = res.getInt("runable") == 1;
             String specialKey = res.getString("special_key");
             boolean moduleTransaction = res.getInt("module_transaction") == 1;
             int order = res.getInt("order");
@@ -65,7 +65,7 @@ public class SyncModuleManager implements SyncParentThread {
 
     @Override
     public boolean needWait(boolean running) {
-        return hasNext(true)&&moduleList.get(listIndex+1).getOrder()>moduleList.get(listIndex).getOrder()&&running;
+        return hasNext(false)&&moduleList.get(listIndex+1).getOrder()>moduleList.get(listIndex).getOrder()&&running;
     }
 
     @Override

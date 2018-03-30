@@ -87,7 +87,7 @@ public class SyncModule extends SyncSonThread implements SyncParentThread {
             Map<String, Object> specialKey = Utils.jsonToMap(resultSet.getString("special_key"));
             String dataBaseId = resultSet.getString("db_id");
             boolean runnable = false;
-            if (resultSet.getInt("runnable") == 1) {
+            if (resultSet.getInt("runable") == 1) {
                 runnable = true;
             }
             int order = resultSet.getInt("order");
@@ -177,7 +177,7 @@ public class SyncModule extends SyncSonThread implements SyncParentThread {
     public boolean needWait(boolean running) {
         //如果有顺序执行的table时
         //则判断是否之前的table是否都跑完 boolean running,且下一个table的order大于这个table的order
-        return hasNext(true)&&tableList.get(dealTableIndex).getOrder() < tableList.get(dealTableIndex + 1).getOrder() && running;
+        return hasNext(false)&&tableList.get(dealTableIndex).getOrder() < tableList.get(dealTableIndex + 1).getOrder() && running;
     }
 
     @Override

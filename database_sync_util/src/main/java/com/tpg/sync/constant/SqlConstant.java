@@ -22,15 +22,15 @@ public class SqlConstant {
     private final static String ONE_TABLE_SQL_TMP = "SELECT * FROM #tableinfo a where table_id=?";
     private final static String MODULE_SQL_TMP = "select * from #moduleinfo where 1=1 #condition ";
     private final static String TIME_UPDATE_SQL = "update #table_name set sync_time = ? where table_id = ?";
-    private final static String INSERT_FIELD_INFO_SQL = "REPLACE INTO `#fieldInfo` (`src_field_name`, `dest_field_name`, `field_type`, `field_length`, `is_time`, `m2m`, `is_primary`, `join_table_id`, `table_id`) " +
-            "VALUES (?, ?, ?, ?, ?, NULL, ?, NULL, ?);";
+    private final static String INSERT_FIELD_INFO_SQL = "REPLACE INTO `#fieldInfo` (`src_field_name`, `dest_field_name`, `is_time`,  `is_primary`,  `table_id`) " +
+            "VALUES (?, ?, ?, ?, ?);";
     private final static String UPDATE_TABLE_RUN_ABLE_SQL = "update #table_name set runable=0 where table_id=?";
 
     private final static Properties CONFIG = Utils.getConfig();
     private final static String TABLE_NAME=CONFIG.getProperty("db.tableinfo.name");
     private final static String DB_NAME=CONFIG.getProperty("db.dbinfo.name");
     private final static String MODULE_NAME=CONFIG.getProperty("db.moduleinfo.name");
-    private final static String FIELD_NAME=CONFIG.getProperty("db.tableinfo.name");
+    private final static String FIELD_NAME=CONFIG.getProperty("db.fieldinfo.name");
 
     public static String getDataBaseConfigSql() {
         return DATABASE_SQL_TMP.replace("#dataBaseInfo", DB_NAME);
@@ -71,7 +71,7 @@ public class SqlConstant {
         return TABLE_INFO_SQL_TMP.replace("#tableinfo",TABLE_NAME);
     }
     public static String getInsertFieldInfo(){
-        return INSERT_FIELD_INFO_SQL.replace("#fieldinfo",FIELD_NAME);
+        return INSERT_FIELD_INFO_SQL.replace("#fieldInfo", FIELD_NAME);
     }
     public static String getUpdateTableRunAbleSql(){
         return UPDATE_TABLE_RUN_ABLE_SQL.replace("#table_name",TABLE_NAME);

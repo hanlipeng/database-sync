@@ -26,14 +26,16 @@ public class ValueBuilder {
     private static final int MAX_NUMBER_OF_COLUMN = SyncThreadManger.getMaxNumberOfColumn();
     private int total=0;
 
-    public ValueBuilder(SyncTable syncTable) throws SQLException, ClassNotFoundException {
+    public ValueBuilder(SyncTable syncTable) {
         this.syncTable = syncTable;
-        String srcSql = syncTable.getSrcSql();
-        Connection srcConn = syncTable.getSrcConn();
-        res = srcConn.createStatement().executeQuery(srcSql);
     }
 
-    public synchronized List<List<SyncField>> getValue() throws SQLException {
+    public synchronized List<List<SyncField>> getValue() throws SQLException, ClassNotFoundException {
+        if(res==null) {
+            String srcSql = syncTable.getSrcSql();
+            Connection srcConn = syncTable.getSrcConn();
+            res = srcConn.createStatement().executeQuery(srcSql);
+        }
         List<SyncField> fieldList = syncTable.getFieldList();
         LinkedList<List<SyncField>> valuesList = new LinkedList<>();
         int count = 0;
