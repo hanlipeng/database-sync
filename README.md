@@ -10,6 +10,7 @@ How to start
 ----
 我写了一套demo放在database_sync_demo中;<br>
 这个只是简单了实现了一些常用方法.<br>
+使用方法是,找一个mysql的数据库运行demo中的test.sql,并在dbsyncconfig.properties中配置刚才说的数据库连接;应该就可以使用了;(这里默认了配置数据库是mysql)<br>
 之后有时间我会详细的讲一讲如何构造自己需要的数据处理方法<br>
 
 结语
