@@ -10,8 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import static com.tpg.sync.constant.TableSpecialKeyConstant.TIME_SET;
-import static com.tpg.sync.constant.TableSpecialKeyConstant.TIME_SET_IGNORE;
+import static com.sync.test.constant.TableSpecialKeyConstant.TIME_SET;
+import static com.sync.test.constant.TableSpecialKeyConstant.TIME_SET_IGNORE;
 import static com.sync.test.constant.FieldSpecialKeyConstant.*;
 /**
  * Create by reph on 2017/10/26
