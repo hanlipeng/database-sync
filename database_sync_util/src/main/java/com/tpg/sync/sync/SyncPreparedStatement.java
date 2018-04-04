@@ -1,6 +1,5 @@
 package com.tpg.sync.sync;
 
-import com.tpg.sync.constant.FieldSpecialKeyConstant;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -76,12 +75,7 @@ public class SyncPreparedStatement {
         int position=1;
         Set<Integer> sortKey = valueMap.keySet();
         for (Integer key:sortKey){
-            String specialPosition = (String) valueMap.get(key).getSpecialKey(FieldSpecialKeyConstant.POSITION_KEY);
-            if(specialPosition!=null){
-                pre.setObject(Integer.parseInt(specialPosition),valueMap.get(key).getDestValue());
-            }else {
                 pre.setObject(position++, valueMap.get(key).getDestValue());
-            }
         }
         pre.addBatch();
     }

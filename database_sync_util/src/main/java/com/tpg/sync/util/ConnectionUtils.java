@@ -41,7 +41,11 @@ public class ConnectionUtils {
                     String urlTmp = SQL_RULE.getProperty(URL + INFO_DB_TYPE);
                     url = urlTmp.replace("#{url}", url).replace("#{user}", user).replace("#{pwd}", pwd)
                             .replace("#{dbname}", dbName);
-                    conn = DriverManager.getConnection(url);
+                    try {
+                        conn = DriverManager.getConnection(url);
+                    } catch (SQLException e) {
+                        throw new SQLException("配置数据库连接错误,请检查配置",e);
+                    }
                 }
             }
         }

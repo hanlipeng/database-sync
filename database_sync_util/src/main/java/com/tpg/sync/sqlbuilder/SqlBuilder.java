@@ -1,16 +1,6 @@
 package com.tpg.sync.sqlbuilder;
 
-import com.mysql.jdbc.StringUtils;
-import com.tpg.sync.exception.NoTimeException;
 import com.tpg.sync.sync.SyncTable;
-import com.tpg.sync.util.Utils;
-
-import java.sql.SQLException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Properties;
 
 
 /**

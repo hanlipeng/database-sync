@@ -86,7 +86,11 @@ public class SyncTable extends SyncSonThread implements SyncParentThread {
     }
 
     private void init() throws Exception {
-        syncMethod = TableFactory.getSyncMethodInstanceByTableType(tableType);
+        try {
+            syncMethod = TableFactory.getSyncMethodInstanceByTableType(tableType);
+        } catch (Exception e) {
+            throw new Exception("syncMethod配置有问题;",e);
+        }
         chooseDataBase();
         buildField();
         buildSql();
@@ -125,8 +129,14 @@ public class SyncTable extends SyncSonThread implements SyncParentThread {
     }
 
     private void buildSql() throws Exception {
-        SqlBuilder srcSqlBuilder = TableFactory.getSrcSqlBuilderInstanceByTableType(tableType);
-        SqlBuilder destSqlBuilder = TableFactory.getDestSqlBuilderInstanceByTableType(tableType);
+        SqlBuilder srcSqlBuilder = null;
+        SqlBuilder destSqlBuilder = null;
+        try {
+            srcSqlBuilder = TableFactory.getSrcSqlBuilderInstanceByTableType(tableType);
+            destSqlBuilder = TableFactory.getDestSqlBuilderInstanceByTableType(tableType);
+        } catch (Exception e) {
+            throw new Exception("syncMethod配置有问题;",e);
+        }
         srcSql = srcSqlBuilder.buildSql(this);
         destSql = destSqlBuilder.buildSql(this);
     }
@@ -175,9 +185,6 @@ public class SyncTable extends SyncSonThread implements SyncParentThread {
     void mainRun() throws Exception {
         SyncThreadManger syncThreadManger = new SyncThreadManger(this);
         syncThreadManger.startThread();
-//        System.out.println("table Start com.tpg.sync.sync");
-//        Thread.sleep(10000);
-//        System.out.println("table End com.tpg.sync.sync");
     }
 
     @Override
@@ -340,12 +347,12 @@ public class SyncTable extends SyncSonThread implements SyncParentThread {
             infoSta.setString(2, syncDataBase.srcDataBase.getDatabaseName());
         }
         ResultSet res = infoSta.executeQuery();
-        fieldList=new LinkedList<>();
+        fieldList = new LinkedList<>();
         while (res.next()) {
             String fieldName = res.getString("field_name");
             String identifyFlag = res.getString("is_identify");
             String fieldType = res.getString("field_type");
-            boolean identify="1".equals(identifyFlag)||"PRI".equals(identifyFlag);
+            boolean identify = "1".equals(identifyFlag) || "PRI".equals(identifyFlag);
             SyncField field = new SyncField(0, fieldName, fieldName, 0, null, identify, id, fieldType, null);
             fieldList.add(field);
         }
